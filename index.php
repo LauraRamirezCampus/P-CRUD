@@ -69,7 +69,38 @@ if (isset($_POST['guardar'])) {
     } else {
         echo "No se encontraron datos con esta cedula.";
     }
-}
+} elseif (isset($_POST['eliminar'])){
+ $cedula = $_POST['cedula'];
+ 
+ // la URL de búsqueda
+ $url = "https://648386ddf2e76ae1b95c9ebf.mockapi.io/crud?cedula=" . urlencode($cedula);
+
+ $response = file_get_contents($url);
+
+ $data = json_decode($response, true);
+ 
+
+ if (!empty($data)) {
+ $id = $data[0]['id'];
+ 
+ 
+ $credenciales["http"]["method"] = "DELETE";
+ $config = stream_context_create($credenciales);
+ 
+
+ $url = "https://648386ddf2e76ae1b95c9ebf.mockapi.io/crud/" . urlencode($id);
+ $response = file_get_contents($url, false, $config);
+ 
+
+ if ($response !== false) {
+ echo "Los datos se eliminaron correctamente.";
+ } else {
+ echo "Error al eliminar los datos.";
+ }
+ } else {
+ echo "No se encontraron datos para la cédula ingresada.";
+ }
+ };
 ?>
 
 <!DOCTYPE html>
@@ -183,7 +214,7 @@ if (isset($_POST['guardar'])) {
             echo "<td>" . $item['horarioEntrada'] . "</td>";
             echo "<td>" . $item['team'] . "</td>";
             echo "<td>" . $item['trainer'] . "</td>";
-            echo "<td><button name='enviarFor'>⬆️</button></td>";
+            echo "<td><button name='mostrar '>⬆️</button></td>";
             
             echo "</tr>";
         }
