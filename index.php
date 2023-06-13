@@ -1,3 +1,39 @@
+<?php
+session_start();
+
+// Guardar datos en la API
+if (isset($_POST['guardar'])) {
+    $data = array();
+    foreach ($_POST as $key => $value) {
+        if ($key !== 'guardar') {
+            $data[$key] = $value;
+        }
+    }
+
+    $data = json_encode($data);
+
+    $options = array(
+        'http' => array(
+            'method' => 'POST',
+            'header' => "Content-type: application/json",
+            'content' => $data
+        )
+    );
+
+    $context = stream_context_create($options);
+    $respuesta = file_get_contents("https://648386ddf2e76ae1b95c9ebf.mockapi.io/crud", false, $context);
+
+    // if ($respuesta !== false) {
+    //     echo $respuesta;
+        
+    //     header("Location: confirmation.php");
+    //     exit();
+    // } else {
+    //     echo "Error";
+    // }
+}       
+      
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -92,7 +128,31 @@
 
     </tr>
     <tbody>
+ <?php
+    $url = "https://648386ddf2e76ae1b95c9ebf.mockapi.io/crud";
+    $response = file_get_contents($url);
 
+    
+    $data = json_decode($response, true);
+
+    if (!empty($data)) {
+        foreach ($data as $item) {
+            echo "<tr>";
+            echo "<td>" . $item['nombre'] . "</td>";
+            echo "<td>" . $item['apellido'] . "</td>";
+            echo "<td>" . $item['direccion'] . "</td>";
+            echo "<td>" . $item['edad'] . "</td>";
+            echo "<td>" . $item['email'] . "</td>";
+            echo "<td>" . $item['horarioEntrada'] . "</td>";
+            echo "<td>" . $item['team'] . "</td>";
+            echo "<td>" . $item['trainer'] . "</td>";
+             echo "<td><button name='enviarFor'>⬆️</button></td>";
+            echo "</tr>";
+        }
+    } else {
+        echo "<tr><td colspan='8'>No se encontraron resultados.</td></tr>";
+    }
+    ?>
     </tbody>
 </table>
 
