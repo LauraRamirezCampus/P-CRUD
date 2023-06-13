@@ -23,17 +23,55 @@ if (isset($_POST['guardar'])) {
     $context = stream_context_create($options);
     $respuesta = file_get_contents("https://648386ddf2e76ae1b95c9ebf.mockapi.io/crud", false, $context);
 
-    // if ($respuesta !== false) {
-    //     echo $respuesta;
+   
+} elseif (isset($_POST['buscar'])) {
+    $cedula = $_POST['cedula'];
+    
+    $url = "https://648386ddf2e76ae1b95c9ebf.mockapi.io/crud?cedula=" . urlencode($cedula);
+    
+    $response = file_get_contents($url);
+    
+    $data = json_decode($response, true);
+
+    if (!empty($data)) {
+       
+        echo "<table>";
+        echo "<thead>";
+        echo "<tr>";
+        echo "<th>Nombre</th>";
+        echo "<th>Apellido</th>";
+        echo "<th>Dirección</th>";
+        echo "<th>Edad</th>";
+        echo "<th>Email</th>";
+        echo "<th>Team</th>";
+        echo "<th>Trainer</th>";
+        // Añade más encabezados de columna 
+        echo "</tr>";
+        echo "</thead>";
+        echo "<tbody>";
         
-    //     header("Location: confirmation.php");
-    //     exit();
-    // } else {
-    //     echo "Error";
-    // }
-}       
-      
+
+        foreach ($data as $item) {
+            echo "<tr>";
+            echo "<td>" . $item['nombre'] . "</td>";
+            echo "<td>" . $item['apellido'] . "</td>";
+            echo "<td>" . $item['direccion'] . "</td>";
+            echo "<td>" . $item['edad'] . "</td>";
+            echo "<td>" . $item['email'] . "</td>";
+            echo "<td>" . $item['team'] . "</td>";
+            echo "<td>" . $item['trainer'] . "</td>";
+            // Añade más columnas según los datos guardados
+            echo "</tr>";
+        }
+
+        echo "</tbody>";
+        echo "</table>";
+    } else {
+        echo "No se encontraron datos con esta cedula.";
+    }
+}
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -113,28 +151,27 @@ if (isset($_POST['guardar'])) {
             </div>
         </div>
     </form>
-</div>
-
-<table>
-    <tr>
-        <th>Nombre</th>
-        <th>Apellido</th>
-        <th>Direccion</th>
-        <th>Edad</th>
-        <th>Email</th>
-        <th>hora de entrada</th>
-        <th>Team</th>
-        <th>Trainer</th>
-
-    </tr>
-    <tbody>
- <?php
+    
+    <table>
+        <tr>
+            <th>Nombre</th>
+            <th>Apellido</th>
+            <th>Direccion</th>
+            <th>Edad</th>
+            <th>Email</th>
+            <th>hora de entrada</th>
+            <th>Team</th>
+            <th>Trainer</th>
+            
+        </tr>
+        <tbody>
+            <?php
     $url = "https://648386ddf2e76ae1b95c9ebf.mockapi.io/crud";
     $response = file_get_contents($url);
-
+    
     
     $data = json_decode($response, true);
-
+    
     if (!empty($data)) {
         foreach ($data as $item) {
             echo "<tr>";
@@ -146,15 +183,17 @@ if (isset($_POST['guardar'])) {
             echo "<td>" . $item['horarioEntrada'] . "</td>";
             echo "<td>" . $item['team'] . "</td>";
             echo "<td>" . $item['trainer'] . "</td>";
-             echo "<td><button name='enviarFor'>⬆️</button></td>";
+            echo "<td><button name='enviarFor'>⬆️</button></td>";
+            
             echo "</tr>";
         }
     } else {
-        echo "<tr><td colspan='8'>No se encontraron resultados.</td></tr>";
+        echo "<tr><td colspan='8'>No hay datos.</td></tr>";
     }
     ?>
     </tbody>
 </table>
 
+</div>
 </body>
 </html>
