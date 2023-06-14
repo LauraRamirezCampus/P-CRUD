@@ -205,7 +205,7 @@ if (isset($_POST['guardar'])) {
                     
 
                         <input type="submit" value="❌" name="eliminar"><br><br>
-                        <input type="submit" value="🔍" name="buscar">
+                        <input type="submit" value="🔍" name="buscar" >
                     </div>
                 </div>
                 <input type="text" name="cedula" placeholder="cedula"
